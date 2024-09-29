@@ -172,10 +172,10 @@ function App() {
             type="number"
             value={seed}
             onChange={handleSeedChange}
-            placeholder="Ingrese una semilla"
+            placeholder="Seed"
             className="bg-gray-600 text-center text-cyan-1002"
           />
-          <button onClick={generateRandomSeed} className="bg-cyan-600 px-2 py-1 text-white rounded-lg">Aleatorio</button>
+          <button onClick={generateRandomSeed} className="bg-cyan-600 px-2 py-1 text-white rounded-lg">Random</button>
         </div>
         <button onClick={exportToPDF} className="mt-4 bg-cyan-600 px-4 py-2 text-white rounded-lg">
           Export
