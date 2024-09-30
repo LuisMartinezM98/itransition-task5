@@ -52,7 +52,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, [region, seed, errors, hasMore, loading]);
+  }, [region, seed, errors, hasMore, loading, pageSize]);
 
   useEffect(() => {
     setUsers([]);
@@ -82,7 +82,11 @@ function App() {
 
   const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRegion(e.target.value);
+    setUsers([]); 
+    pageRef.current = 1;
+    setHasMore(true);
   };
+
 
   const handleErrorsChange = (value: number | string) => {
     const num = Number(value);
@@ -144,7 +148,6 @@ function App() {
           <select className="bg-gray-500 rounded-lg m-4" value={region} onChange={handleRegionChange}>
             <option value="poland">Polonia</option>
             <option value="usa">EE.UU.</option>
-            <option value="georgia">Georgia</option>
           </select>
         </div>
         <div className="flex justify-center items-center gap-4 p-2 bg-gradient-to-bl from-gray-600 to-gray-500 rounded-lg">

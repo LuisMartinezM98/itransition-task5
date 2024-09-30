@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
+import { faker as fakerEN } from '@faker-js/faker/locale/en';
+import { faker as fakerPL } from '@faker-js/faker/locale/pl';
 
-// Define la estructura de los parámetros de entrada
 interface GenerateUsersParams {
     region?: string;
     seed?: number;
@@ -9,7 +9,6 @@ interface GenerateUsersParams {
     pageSize?: number;
 }
 
-// Define la estructura del usuario
 interface User {
     index: number;
     identifier: string;
@@ -18,15 +17,11 @@ interface User {
     phone: string;
 }
 
-// Configuración regional
-const regions: { [key: string]: string } = {
-    poland: 'pl',
-    usa: 'en_US',
-    georgia: 'en_GE',
-    // Añade más regiones si es necesario
+const regionFakers: { [key: string]: any } = {
+    poland: fakerPL,
+    usa: fakerEN,
 };
 
-// Función para inyectar errores en los datos
 function injectErrors(data: User, errorCount: number): User {
     const fields = ['name', 'address', 'phone'];
     for (let i = 0; i < errorCount; i++) {
@@ -48,7 +43,6 @@ function injectErrors(data: User, errorCount: number): User {
     return data;
 }
 
-// Función para generar usuarios
 export function generateUsers({
     region = 'usa',
     seed = Math.floor(Math.random() * 100000),
@@ -56,11 +50,11 @@ export function generateUsers({
     page = 1,
     pageSize = 20,
 }: GenerateUsersParams): User[] {
-    if (!regions[region.toLowerCase()]) {
+    const faker = regionFakers[region.toLowerCase()];
+
+    if (!faker) {
         throw new Error('Región no soportada.');
     }
-
-    // Configurar la semilla para Faker
     faker.seed(seed);
 
     const users: User[] = [];
@@ -69,13 +63,12 @@ export function generateUsers({
     for (let i = 0; i < pageSize; i++) {
         let user: User = {
             index: startIndex + i,
-            identifier: faker.string.uuid(), // Generar UUID
-            name: faker.person.fullName(), // Cambiado a faker.person.fullName()
-            address: `${faker.location.streetAddress()}, ${faker.location.city()}, ${faker.location.country()}`, // Cambios en la dirección
-            phone: faker.phone.number(), // Mantener el teléfono
+            identifier: faker.string.uuid(),
+            name: faker.person.fullName(),
+            address: `${faker.location.streetAddress()}, ${faker.location.city()}, ${faker.location.country()}`,
+            phone: faker.phone.number(),
         };
 
-        // Determinar si se deben inyectar errores
         const errorProbability = errors / 10;
         if (Math.random() < errorProbability) {
             user = injectErrors(user, errors);
